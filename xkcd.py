@@ -7,7 +7,7 @@ from PIL import Image
 if len(sys.argv)==2:
     if str(sys.argv[1]) == 'help':
         print('I need help')
-        print('用法：python xkcd.py [功能] ([模式] [要下載的範圍])')
+        print('用法：python xkcd.py [功能] ([模式] [要下載的範圍或名稱])')
         print('ex:python3 xkcd.py 1')
         print('ex:python3 xkcd.py 2 r')
         print('ex:python3 xkcd.py 2 1-5')
@@ -15,10 +15,10 @@ if len(sys.argv)==2:
         print('ex:python3 xkcd.py 2 1')
         print('ex:python3 xkcd.py 2 in_your_classroom')
         print('xkcd.com 是一個很酷的漫畫網站，從 2005 年開始，網站上上面會不定期刊載作者 Randall Munroe 繪製的漫畫，經常以火柴形狀的人物呈現許多生活中不同主題的梗或趣味話題。\n')
-        print('輸入1大量下載：一次下載任意 50 張 xkcd 的漫畫（不限哪幾張但不可重複）。先建立一個資料夾（子目錄），之後將這 50 張全部存成個別的檔案置入資料夾中。\n')
+        print('功能1大量下載：一次下載任意 50 張 xkcd 的漫畫（不限哪幾張但不可重複）。先建立一個資料夾（子目錄），之後將這 50 張全部存成個別的檔案置入資料夾中。\n')
         print('===================================================================================================================================')
         print('功能2指定下載：以 input 輸入指定的漫畫，下載存入一個 png，並且打開。')
-        print('功能二的模式：')
+        print('功能2的模式：')
         print("    輸入單一數字，代表下載一則。")
         print("    輸入 r 和 random 代表隨機下載一則。")
         print("    輸入以 , 分隔的多個數字，代表下載多則。")
@@ -35,11 +35,11 @@ urlst = []
 for _ in range(1, 2467):
     urlst.append(s+str(_))
 while 1:  # 偵測新漫畫
-    res = requests.get(s+str(a))
+    res = requests.get(s+str(a+1))
     res = str(res)
-    a += 1
     if '200' in res:
-        urlst.append(s+str(a))
+        urlst.append(s+str(a+1))
+        a+=1
     else:
         break
 if len(sys.argv)==1:
@@ -174,6 +174,7 @@ if n == 2:  # 第二項操作
                         Image.open(re+".png").show()
 
         elif op.isdigit():  # 輸入編號
+            print(a)
             if int(op) > a or int(op) <= 0:
                 print('無此漫畫，請重新輸入')
                 if len(sys.argv)!=1:
