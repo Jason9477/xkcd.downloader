@@ -47,6 +47,7 @@ if len(sys.argv)==1:
 else:
     n=int(sys.argv[1])
 if n == 1:  # 第一項操作
+    errcount=0
     os.mkdir('./xkcd')
     new_url = urlst
     random.shuffle(new_url)
@@ -58,12 +59,16 @@ if n == 1:  # 第一項操作
         result = soup.select('#comic > img')
         if result == []:
             result = soup.select('#comic > a > img')
-        re = 'https:'+result[0].attrs['src']
-        res = requests.get(re)
-        re = re.split('/')[-1]
-        re = re.split('.')[0]
-        with open('xkcd/'+re+'.png', 'wb') as f:
-            f.write(res.content)
+        if result == []:
+            errcount+=1
+            print(str(errcount)+"個錯誤")
+        else:
+            re = 'https:'+result[0].attrs['src']
+            res = requests.get(re)
+            re = re.split('/')[-1]
+            re = re.split('.')[0]
+            with open('xkcd/'+re+'.png', 'wb') as f:
+                f.write(res.content)
 
 if n == 2:  # 第二項操作
     if len(sys.argv)==1:
@@ -79,6 +84,7 @@ if n == 2:  # 第二項操作
         else:
             op=sys.argv[2]
         if op == 'random' or op == 'r':  # random
+            errcount=0
             FLAG = False
             res = random.choice(urlst)
             r = requests.get(res)
@@ -86,19 +92,25 @@ if n == 2:  # 第二項操作
             result = soup.select('#comic > img')
             if result == []:
                 result = soup.select('#comic > a > img')
-            re = 'https:'+result[0].attrs['src']
-            res = requests.get(re)
-            re = re.split('/')[-1]
-            re = re.split('.')[0]
-            with open(re+'.png', 'wb') as f:
-                f.write(res.content)
-            Image.open(re+".png").show()
-            break
+            if result == []:
+                errcount+=1
+                print(str(errcount)+"個錯誤")
+            else:
+                re = 'https:'+result[0].attrs['src']
+                res = requests.get(re)
+                re = re.split('/')[-1]
+                re = re.split('.')[0]
+                with open(re+'.png', 'wb') as f:
+                    f.write(res.content)
+                Image.open(re+".png").show()
+                break
 
         elif ',' in op:  # number,number...
+            errcount=0
             FLAG = False
             multilist = op.split(',')
-            multilist.remove('')
+            if '' in multilist:
+                multilist.remove('')
             for i in multilist:
                 if int(i) > a or int(i) <= 0:
                     print('無此漫畫，請重新輸入')
@@ -110,19 +122,24 @@ if n == 2:  # 第二項操作
                     pass
 
             if FLAG is not True:
+                errcount=0
                 for i in multilist:
                     r = requests.get(s+i)
                     soup = BeautifulSoup(r.text, "html.parser")
                     result = soup.select('#comic > img')
                     if result == []:
                         result = soup.select('#comic > a > img')
-                    re = 'https:'+result[0].attrs['src']
-                    res = requests.get(re)
-                    re = re.split('/')[-1]
-                    re = re.split('.')[0]
-                    with open(re+'.png', 'wb') as f:
-                        f.write(res.content)
-                    Image.open(re+".png").show()
+                    if result == []:
+                        errcount+=1
+                        print(str(errcount)+"個錯誤")
+                    else:
+                        re = 'https:'+result[0].attrs['src']
+                        res = requests.get(re)
+                        re = re.split('/')[-1]
+                        re = re.split('.')[0]
+                        with open(re+'.png', 'wb') as f:
+                            f.write(res.content)
+                        Image.open(re+".png").show()
 
         elif '-' in op:  # number-nuber
             multilist = list(map(int, op.split('-')))
@@ -133,6 +150,7 @@ if n == 2:  # 第二項操作
                 FLAG = True
                 continue
             else:
+                errcount=0
                 lst = []
                 FLAG = False
                 for _ in range(multilist[0], multilist[1]+1):
@@ -143,13 +161,17 @@ if n == 2:  # 第二項操作
                     result = soup.select('#comic > img')
                     if result == []:
                         result = soup.select('#comic > a > img')
-                    re = 'https:'+result[0].attrs['src']
-                    res = requests.get(re)
-                    re = re.split('/')[-1]
-                    re = re.split('.')[0]
-                    with open(re+'.png', 'wb') as f:
-                        f.write(res.content)
-                    Image.open(re+".png").show()
+                    if result == []:
+                        errcount+=1
+                        print(str(errcount)+"個錯誤")
+                    else:
+                        re = 'https:'+result[0].attrs['src']
+                        res = requests.get(re)
+                        re = re.split('/')[-1]
+                        re = re.split('.')[0]
+                        with open(re+'.png', 'wb') as f:
+                            f.write(res.content)
+                        Image.open(re+".png").show()
 
         elif op.isdigit():  # 輸入編號
             if int(op) > a or int(op) <= 0:
@@ -159,19 +181,24 @@ if n == 2:  # 第二項操作
                 FLAG = True
                 continue
             else:
+                errcount=0
                 FLAG = False
                 r = requests.get(s+op)
                 soup = BeautifulSoup(r.text, "html.parser")
                 result = soup.select('#comic > img')
                 if result == []:
                     result = soup.select('#comic > a > img')
-                re = 'https:'+result[0].attrs['src']
-                res = requests.get(re)
-                re = re.split('/')[-1]
-                re = re.split('.')[0]
-                with open(re+'.png', 'wb') as f:
-                    f.write(res.content)
-                Image.open(re+".png").show()
+                if result == []:
+                    errcount+=1
+                    print(str(errcount)+"個錯誤")
+                else:
+                    re = 'https:'+result[0].attrs['src']
+                    res = requests.get(re)
+                    re = re.split('/')[-1]
+                    re = re.split('.')[0]
+                    with open(re+'.png', 'wb') as f:
+                        f.write(res.content)
+                    Image.open(re+".png").show()
         else:  # 輸入名稱
             #print('op in bonus!!!!!')
             FLAG = False
