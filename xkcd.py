@@ -1,4 +1,4 @@
-import os                    #有寫網頁有多個圖片,沒有圖片,標籤不同真的很煩
+import os                    #有些網頁有多個圖片,沒有圖片,標籤不同真的很煩
 import random
 import sys
 from bs4 import BeautifulSoup
@@ -160,8 +160,10 @@ if n == 2:  # 第二項操作
                     soup = BeautifulSoup(r.text, "html.parser")
                     result = soup.select('#comic > img')
                     if result == []:
+                        print(i)
                         result = soup.select('#comic > a > img')
                     if result == []:
+                        print(i)
                         errcount+=1
                         print(str(errcount)+"個錯誤")
                     else:
@@ -169,9 +171,9 @@ if n == 2:  # 第二項操作
                         res = requests.get(re)
                         re = re.split('/')[-1]
                         re = re.split('.')[0]
-                        with open(re+'.png', 'wb') as f:
+                        '''with open(re+'.png', 'wb') as f:
                             f.write(res.content)
-                        Image.open(re+".png").show()
+                        Image.open(re+".png").show()'''
 
         elif op.isdigit():  # 輸入編號
             print(a)
@@ -206,6 +208,12 @@ if n == 2:  # 第二項操作
             res = requests.get('https://imgs.xkcd.com/comics/'+op+'.png')
             if '200' not in str(res):
                 res = requests.get('https://imgs.xkcd.com/comics'+op+'.jpg')
+            if '200' not in str(res):
+                print('無此漫畫請重新輸入')
+                if len(sys.argv)!=1:
+                    quit()
+                FLAG = True
+                continue
             with open(op+'.png', 'wb') as f:
                 f.write(res.content)
 
